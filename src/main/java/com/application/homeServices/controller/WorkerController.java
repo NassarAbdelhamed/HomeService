@@ -1,15 +1,35 @@
 package com.application.homeServices.controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.application.homeServices.dto.Customerdata;
+import com.application.homeServices.dto.Workerdata;
+import com.application.homeServices.service.ProfileServices;
+import com.application.homeServices.service.WorkerService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/worker")
 public class WorkerController {
 
-    @GetMapping("/worker-data")
-    public String workerData() {
-        return "This data is only accessible to Workers.";
+    @Autowired
+    private ProfileServices profileServices;
+
+    @Autowired
+    private WorkerService workerService;
+
+    @PostMapping("/data")
+    public ResponseEntity<?> userData(@RequestBody Workerdata workerdata) {
+        return ResponseEntity.ok(profileServices.WorkerEdit(workerdata));
+    }
+
+    @GetMapping("/request/{id}")
+    public ResponseEntity<?> allReq(@PathVariable Long id) {
+        return ResponseEntity.ok(workerService.allReq(id));
+    }
+
+    @GetMapping("/rate/{id}")
+    public ResponseEntity<?> rateq(@PathVariable Long id){
+        return ResponseEntity.ok(workerService.rate(id));
     }
 }

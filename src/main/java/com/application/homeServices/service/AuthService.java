@@ -1,9 +1,14 @@
 package com.application.homeServices.service;
 
 import com.application.homeServices.dto.Role;
+import com.application.homeServices.dto.UserResponse;
 import com.application.homeServices.jwt.JwtUtil;
+import com.application.homeServices.models.CustomerProfile;
 import com.application.homeServices.models.User;
+import com.application.homeServices.models.WorkerProfile;
+import com.application.homeServices.repository.CustomerProfileRepo;
 import com.application.homeServices.repository.UserRepo;
+import com.application.homeServices.repository.WorkerProfileRepo;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +31,12 @@ public class AuthService {
     private UserRepo userRepository;
 
     @Autowired
+    private CustomerProfileRepo customerProfileRepo;
+
+    @Autowired
+    private WorkerProfileRepo workerProfileRepo;
+
+    @Autowired
     private JwtUtil jwtUtil;
 
     @Autowired
@@ -36,10 +47,18 @@ public class AuthService {
     public ResponseEntity<?> signup(User user, HttpServletResponse response) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setActive(false);
-        userRepository.save(user);
+        User user1=userRepository.save(user);
         String token = jwtUtil.generateToken(user.getEmail(), user.getRole().name());
         setJwtCookie(response, token);
-        return new ResponseEntity<>("Signup successful", HttpStatus.OK);
+        sendActiveCode(user.getEmail());
+        if(user.getRole()==Role.USER) {
+            customerProfileRepo.save(new CustomerProfile(user1.getId()," "));
+        }
+        else{
+            workerProfileRepo.save(new WorkerProfile(user1.getId()," "," "," ","",""));
+        }
+         User user2=userRepository.findByEmail(user.getEmail()).get();
+         return new ResponseEntity<>(new UserResponse(user2.getId(),user2.getEmail()), HttpStatus.OK);
     }
 
     public ResponseEntity<?> login(String email, String password, HttpServletResponse response) {
@@ -47,7 +66,9 @@ public class AuthService {
         if (user.isPresent() && passwordEncoder.matches(password, user.get().getPassword())) {
             String token = jwtUtil.generateToken(email, user.get().getRole().name());
             setJwtCookie(response, token);
-            return new ResponseEntity<>("Login successful", HttpStatus.OK);
+
+            User user1=userRepository.findByEmail(email).get();
+            return new ResponseEntity<>(new UserResponse(user1.getId(),user1.getEmail()), HttpStatus.OK);
         }
         throw new RuntimeException("Invalid credentials");
     }
@@ -68,7 +89,7 @@ public class AuthService {
         user.setActiveCode(code);
         userRepository.save(user);
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom("nassarabdelhamed556@gmail.com");
+        message.setFrom("Sala7ly@gmail.com");
         message.setTo(email);
         message.setSubject("Active Code");
         message.setText(" your Active Code : "+code);

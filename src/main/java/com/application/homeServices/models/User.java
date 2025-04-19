@@ -23,11 +23,12 @@ import java.util.Collections;
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
     @Column(unique = true,nullable = false)
     private String email;
     @Column(nullable =false)
     private String password;
+    private String imagePath;
     @Enumerated(EnumType.STRING)
     private Role role;
     @Column(nullable = false)

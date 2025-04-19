@@ -28,26 +28,25 @@ public class SecurityFilter {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-
         http
                 .csrf(csrfConfig -> csrfConfig.disable())
                 .sessionManagement(sessionMangConfig -> sessionMangConfig.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                .authorizeHttpRequests( authConfig -> {
+                .authorizeHttpRequests(authConfig -> {
                     authConfig.requestMatchers(HttpMethod.POST, "/auth/**").permitAll();
                     authConfig.requestMatchers(HttpMethod.GET, "/auth/**").permitAll();
                     authConfig.requestMatchers("/error").permitAll();
-                    authConfig.requestMatchers(HttpMethod.GET ,"/api/user-data/**").hasAuthority(Role.USER.name());
-                    authConfig.requestMatchers(HttpMethod.GET, "/api/worker-data/**").hasAuthority(Role.WORKER.name());
+                    authConfig.requestMatchers(HttpMethod.GET, "/customer/**").hasAuthority(Role.USER.name());
+                    authConfig.requestMatchers(HttpMethod.POST, "/customer/**").hasAuthority(Role.USER.name());
+                    authConfig.requestMatchers(HttpMethod.GET, "/worker/**").hasAuthority(Role.WORKER.name());
+                    authConfig.requestMatchers(HttpMethod.POST, "/worker/**").hasAuthority(Role.WORKER.name());
 
-
+                    authConfig.requestMatchers(HttpMethod.GET, "/profile/**").hasAnyAuthority(Role.USER.name(), Role.WORKER.name());
+                    authConfig.requestMatchers(HttpMethod.POST, "/profile/**").hasAnyAuthority(Role.USER.name(), Role.WORKER.name());
                     authConfig.anyRequest().denyAll();
-
-
                 });
 
         return http.build();
-
     }
 }

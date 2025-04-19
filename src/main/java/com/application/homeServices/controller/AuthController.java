@@ -41,19 +41,6 @@ public class AuthController {
         return new ResponseEntity<>(authService.all(), HttpStatus.OK);
     }
 
-    @PostMapping("/mail")
-    public ResponseEntity<?> mail(@RequestBody Map<String, String> request) {
-        String email = request.get("email").trim(); // Extract email from the JSON object
-
-
-        try {
-            authService.sendActiveCode(email);
-            return new ResponseEntity<>("Mail sent", HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>("Failed to send email: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
     @PostMapping("/active")
     public  ResponseEntity<?> active(@RequestBody ActivationRequest req){
         try {
