@@ -55,7 +55,7 @@ public class AuthService {
             customerProfileRepo.save(new CustomerProfile(user1.getId(),user.getName()));
         }
         else{
-            workerProfileRepo.save(new WorkerProfile(user1.getId(),user.getName()," "," ","",""));
+            workerProfileRepo.save(new WorkerProfile(user1.getId(),user.getName()," "," ","","",0,"",""));
         }
          User user2=userRepository.findByEmail(user.getEmail()).get();
          return new ResponseEntity<>(new UserResponse(user2.getId(),user2.getEmail(),user2.getName()), HttpStatus.OK);
@@ -89,7 +89,7 @@ public class AuthService {
         user.setActiveCode(code);
         userRepository.save(user);
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom("Sala7ly@gmail.com");
+        message.setFrom("nassarabdelhamed556@gmail.com");
         message.setTo(email);
         message.setSubject("Active Code");
         message.setText(" your Active Code : "+code);

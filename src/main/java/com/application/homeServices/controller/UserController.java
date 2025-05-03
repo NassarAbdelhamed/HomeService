@@ -43,8 +43,8 @@ public class UserController {
         return ResponseEntity.ok(userService.allReq(id));
     }
 
-    @PostMapping ("/request/cancel")
-    public ResponseEntity<?> cancelReq(@RequestBody long reqId) {
+    @PostMapping ("/request/cancel/{reqId}")
+    public ResponseEntity<?> cancelReq(@PathVariable long reqId) {
         return ResponseEntity.ok(userService.cancel(reqId));
     }
 

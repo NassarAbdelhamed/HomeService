@@ -27,12 +27,15 @@ public class WorkerProfile {
     private String skills;
     private String credentials;
 
-    public WorkerProfile (long id, String name,String jobTittle,String address,String latitude,String longitude) {
+    public WorkerProfile (long id, String name,String jobTittle,String address,String latitude,String longitude,int age,String phoneNumber, String skills) {
         this.userId=id;
         this.name=name;
         this.jobTittle=jobTittle;
         this.latitude=latitude;
         this.longitude=longitude;
         this.address=address;
+        this.age=age;
+        this.phoneNumber=phoneNumber;
+        this.skills=skills;
     }
 }

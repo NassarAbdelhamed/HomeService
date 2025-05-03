@@ -14,7 +14,4 @@ public class Customerdata implements MyDate {
     private String name;
     private  String phoneNumber;
     private int age;
-    public Long getUserId(){
-        return this.userId;
-    }
 }

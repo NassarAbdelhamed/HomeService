@@ -43,6 +43,8 @@ public class ProfileServices {
         User user=userRepo.findById(customerdata.getUserId()).get();
             CustomerProfile customerProfile = customerProfileRepo.findByUserId(customerdata.getUserId()).get();
             customerProfile.setName(customerdata.getName());
+            customerProfile.setAge(customerdata.getAge());
+            customerProfile.setPhoneNumber(customerdata.getPhoneNumber());
             return customerProfileRepo.save(customerProfile);
     }
     public WorkerProfile WorkerEdit(Workerdata workerdata){
@@ -50,6 +52,12 @@ public class ProfileServices {
             WorkerProfile workerProfile = workerProfileRepo.findByUserId(workerdata.getWorkerId()).get();
             workerProfile.setName(workerdata.getName());
             workerProfile.setJobTittle(workerdata.getJobTittle());
+            workerProfile.setAddress(workerdata.getAddress());
+            workerProfile.setLatitude(workerdata.getLatitude());
+            workerProfile.setLongitude(workerdata.getLongitude());
+            workerProfile.setAge(workerdata.getAge());
+            workerProfile.setPhoneNumber(workerdata.getPhoneNumber());
+            workerProfile.setSkills(workerdata.getSkills());
             return workerProfileRepo.save(workerProfile);
     }
 }

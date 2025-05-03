@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class WorkerService {
@@ -34,21 +35,28 @@ public class WorkerService {
 
 
     @Cacheable(value = "rate", key = "#id")
-    public double rate(Long id)  {
-      List<Request> requests =requestRepo.findByWorkerId(id);
-      if(requests.size()==0){return 0;}
-      double sum=0;
-      for(Request r:requests){
-          sum+=r.getRate();
-      }
-      return sum/requests.size();
+    public double rate(Long id) {
+        List<Request> requests = requestRepo.findByWorkerId(id);
+        if(requests.isEmpty()) return 0;
+
+        double sum = 0;
+        int ratedCount = 0;
+
+        for(Request r : requests) {
+            if(r.getRate() > 0) { // Only count requests with positive ratings
+                sum += r.getRate();
+                ratedCount++;
+            }
+        }
+
+        return ratedCount > 0 ? sum / ratedCount : 0;
     }
 
     public List<Review2> Comments(Long id)  {
         List<Request> requests =requestRepo.findByWorkerId(id);
         List<Review2> comments=new ArrayList<>();
         for(Request r:requests){
-          if(r.getComment()!=""){
+          if(!Objects.equals(r.getComment(), "")){
               String name= userRepo.findById(r.getUserId()).get().getName();
               comments.add(new Review2(r.getUserId(),name,r.getRate(),r.getComment()));
           }
@@ -60,7 +68,7 @@ public class WorkerService {
         String name=userRepo.findById(request.getUserId()).get().getName();
         String email=userRepo.findById(request.getUserId()).get().getEmail();
         request.setStatus(Status.accept);
-        sendacceptMassage(name,email);
+        sendacceptMassage(email,name);
         return requestRepo.save(request);
 
     }
@@ -69,26 +77,26 @@ public class WorkerService {
         String name=userRepo.findById(request.getUserId()).get().getName();
         String email=userRepo.findById(request.getUserId()).get().getEmail();
         request.setStatus(Status.canceled);
-        sendCanceltMassage(name,email);
+        sendCanceltMassage(email,name);
         return requestRepo.save(request);
 
     }
 
     public void sendacceptMassage(String email,String name){
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom("Sala7ly@gmail.com");
+        message.setFrom("nassarabdelhamed556@gmail.com");
         message.setTo(email);
-        message.setSubject("You have a  new request");
-        message.setText(name+ "agree with you");
+        message.setSubject("Information about your order");
+        message.setText("Fortunately, "+ name +"accepted your offer.");
         javaMailSender.send(message);
     }
 
     public void sendCanceltMassage(String email,String name){
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom("Sala7ly@gmail.com");
+        message.setFrom("nassarabdelhamed556@gmail.com");
         message.setTo(email);
-        message.setSubject("You have a  new request");
-        message.setText(name+ " rejected you");
+        message.setSubject("Information about your order");
+        message.setText("Unfortunately, "+ name +" rejected your offer.");
         javaMailSender.send(message);
     }
 }

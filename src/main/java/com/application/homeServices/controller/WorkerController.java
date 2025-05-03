@@ -66,13 +66,13 @@ public class WorkerController {
             return ResponseEntity.badRequest().body(null);
         }
     }
-    @PostMapping ("/request/cancel")
-    public ResponseEntity<?> cancelReq(@RequestBody long reqId) {
+    @PostMapping ("/request/cancel/{reqId}")
+    public ResponseEntity<?> cancelReq(@PathVariable long reqId) {
         return ResponseEntity.ok(workerService.cancel(reqId));
     }
 
-    @PostMapping ("/request/accept")
-    public ResponseEntity<?> acceptReq (@RequestBody long reqId) {
+    @PostMapping ("/request/accept/{reqId}")
+    public ResponseEntity<?> acceptReq (@PathVariable long reqId) {
         return ResponseEntity.ok(workerService.accept(reqId));
     }
     @GetMapping("/comments/{id}")

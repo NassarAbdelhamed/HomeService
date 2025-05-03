@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Workerdata implements MyDate {
-    private long WorkerId;
+    private long workerId;
     private String email;
     private String name;
     private String jobTittle;
