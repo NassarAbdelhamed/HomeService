@@ -25,6 +25,7 @@ public class Request {
     private String description;
     private String latitude;
     private String longitude;
+    private double salary;
     private double rate;
     private String comment;
 }

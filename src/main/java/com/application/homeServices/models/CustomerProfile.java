@@ -18,6 +18,8 @@ public class CustomerProfile {
     @Column(name = "user_id",unique = true)
     private long userId;
     private String name;
+    private  String phoneNumber;
+    private int age;
 
     public CustomerProfile(long id, String name) {
         this.userId=id;

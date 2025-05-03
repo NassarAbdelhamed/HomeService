@@ -13,6 +13,7 @@ public class Req {
     private long workerId;
     private String address;
     private String description;
+    private double salary;
     private String latitude;
     private String longitude;
 }

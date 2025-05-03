@@ -52,13 +52,13 @@ public class AuthService {
         setJwtCookie(response, token);
         sendActiveCode(user.getEmail());
         if(user.getRole()==Role.USER) {
-            customerProfileRepo.save(new CustomerProfile(user1.getId()," "));
+            customerProfileRepo.save(new CustomerProfile(user1.getId(),user.getName()));
         }
         else{
-            workerProfileRepo.save(new WorkerProfile(user1.getId()," "," "," ","",""));
+            workerProfileRepo.save(new WorkerProfile(user1.getId(),user.getName()," "," ","",""));
         }
          User user2=userRepository.findByEmail(user.getEmail()).get();
-         return new ResponseEntity<>(new UserResponse(user2.getId(),user2.getEmail()), HttpStatus.OK);
+         return new ResponseEntity<>(new UserResponse(user2.getId(),user2.getEmail(),user2.getName()), HttpStatus.OK);
     }
 
     public ResponseEntity<?> login(String email, String password, HttpServletResponse response) {
@@ -68,7 +68,7 @@ public class AuthService {
             setJwtCookie(response, token);
 
             User user1=userRepository.findByEmail(email).get();
-            return new ResponseEntity<>(new UserResponse(user1.getId(),user1.getEmail()), HttpStatus.OK);
+            return new ResponseEntity<>(new UserResponse(user1.getId(),user1.getEmail(),user1.getName()), HttpStatus.OK);
         }
         throw new RuntimeException("Invalid credentials");
     }

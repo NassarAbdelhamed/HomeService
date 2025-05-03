@@ -22,6 +22,10 @@ public class WorkerProfile {
     private String address;
     private String latitude;
     private String longitude;
+    private int age;
+    private String phoneNumber;
+    private String skills;
+    private String credentials;
 
     public WorkerProfile (long id, String name,String jobTittle,String address,String latitude,String longitude) {
         this.userId=id;

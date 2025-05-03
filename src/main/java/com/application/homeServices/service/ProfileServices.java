@@ -29,13 +29,14 @@ public class ProfileServices {
         User user= userRepo.findById(id).get();
         if(user.getRole()== Role.USER){
             CustomerProfile customerProfile=customerProfileRepo.findByUserId(id).get();
-            return new Customerdata(user.getId(), user.getEmail(), customerProfile.getName());
+            return new Customerdata(user.getId(), user.getEmail(), customerProfile.getName(),customerProfile.getPhoneNumber(),customerProfile.getAge());
         }
         else {
             WorkerProfile workerProfile=workerProfileRepo.findByUserId(id).get();
             return new Workerdata(
                     user.getId(),user.getEmail(),workerProfile.getName(),workerProfile.getJobTittle(),workerProfile.getAddress(),
-                    workerProfile.getLatitude(), workerProfile.getLongitude());
+                    workerProfile.getLatitude(), workerProfile.getLongitude(),workerProfile.getAge(),workerProfile.getPhoneNumber()
+                    ,workerProfile.getSkills(),workerProfile.getCredentials());
         }
     }
     public CustomerProfile CustomerEdit(Customerdata customerdata){
