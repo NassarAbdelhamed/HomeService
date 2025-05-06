@@ -23,11 +23,12 @@ public class WorkerProfile {
     private String latitude;
     private String longitude;
     private int age;
+    private String about;
     private String phoneNumber;
     private String skills;
     private String credentials;
 
-    public WorkerProfile (long id, String name,String jobTittle,String address,String latitude,String longitude,int age,String phoneNumber, String skills) {
+    public WorkerProfile (long id, String name,String jobTittle,String address,String latitude,String longitude,String about,int age,String phoneNumber, String skills) {
         this.userId=id;
         this.name=name;
         this.jobTittle=jobTittle;

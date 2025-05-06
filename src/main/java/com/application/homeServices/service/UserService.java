@@ -36,7 +36,7 @@ public class UserService {
         List<Workerdata> l =new ArrayList<Workerdata>();
         for(User u :list){
            WorkerProfile w= workerProfileRepo.findByUserId(u.getId()).get();
-            Workerdata workerdata=new Workerdata(w.getUserId(),u.getEmail(),w.getName(),w.getJobTittle(),w.getAddress(),w.getLatitude(),w.getLongitude(),w.getAge(),w.getPhoneNumber(),w.getSkills(),w.getCredentials());
+            Workerdata workerdata=new Workerdata(w.getUserId(),u.getEmail(),w.getName(),w.getJobTittle(),w.getAddress(),w.getLatitude(),w.getLongitude(),w.getAge(),w.getAbout(),w.getPhoneNumber(),w.getSkills(),w.getCredentials());
             l.add(workerdata);
         }
         return l;

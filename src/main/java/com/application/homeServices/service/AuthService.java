@@ -55,7 +55,7 @@ public class AuthService {
             customerProfileRepo.save(new CustomerProfile(user1.getId(),user.getName()));
         }
         else{
-            workerProfileRepo.save(new WorkerProfile(user1.getId(),user.getName()," "," ","","",0,"",""));
+            workerProfileRepo.save(new WorkerProfile(user1.getId(),user.getName()," "," ","","","",0,"",""));
         }
          User user2=userRepository.findByEmail(user.getEmail()).get();
          return new ResponseEntity<>(new UserResponse(user2.getId(),user2.getEmail(),user2.getName()), HttpStatus.OK);

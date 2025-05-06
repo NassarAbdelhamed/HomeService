@@ -17,6 +17,7 @@ public class Workerdata implements MyDate {
     private String latitude;
     private String longitude;
     private int age;
+    private String about;
     private String phoneNumber;
     private String skills;
     private String credentials;

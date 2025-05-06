@@ -35,7 +35,7 @@ public class ProfileServices {
             WorkerProfile workerProfile=workerProfileRepo.findByUserId(id).get();
             return new Workerdata(
                     user.getId(),user.getEmail(),workerProfile.getName(),workerProfile.getJobTittle(),workerProfile.getAddress(),
-                    workerProfile.getLatitude(), workerProfile.getLongitude(),workerProfile.getAge(),workerProfile.getPhoneNumber()
+                    workerProfile.getLatitude(), workerProfile.getLongitude(),workerProfile.getAge(),workerProfile.getAbout(),workerProfile.getPhoneNumber()
                     ,workerProfile.getSkills(),workerProfile.getCredentials());
         }
     }
@@ -56,6 +56,7 @@ public class ProfileServices {
             workerProfile.setLatitude(workerdata.getLatitude());
             workerProfile.setLongitude(workerdata.getLongitude());
             workerProfile.setAge(workerdata.getAge());
+            workerProfile.setAbout(workerdata.getAbout());
             workerProfile.setPhoneNumber(workerdata.getPhoneNumber());
             workerProfile.setSkills(workerdata.getSkills());
             return workerProfileRepo.save(workerProfile);
