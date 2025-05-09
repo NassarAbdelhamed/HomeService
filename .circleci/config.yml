@@ -1,40 +1,42 @@
 version: 2.1
 
+orbs:
+  docker: circleci/docker@2.6.0  # Updated to latest stable version
+
 jobs:
   build-and-push:
     docker:
-      - image: cimg/openjdk:17.0-node
+      - image: cimg/openjdk:17.0-node  # Java 17 with Node.js
     steps:
       - checkout
-      - setup_remote_docker:
-          docker_layer_caching: true
-      - restore_cache:
-          keys:
-            - v1-maven-cache-{{ checksum "pom.xml" }}
+      
+      # Setup Docker with layer caching
+      - docker/check
+      - docker/setup-buildx:
+          install: true
+          version: latest
+      - docker/setup-docker-credentials:
+          dockerhub-username: DOCKERHUB_USERNAME
+          dockerhub-password: DOCKERHUB_PASSWORD
+      
+      # Build Java project
       - run:
           name: Build with Maven
           command: |
             chmod +x ./mvnw
             ./mvnw clean package -DskipTests
-      - save_cache:
-          paths:
-            - ~/.m2
-          key: v1-maven-cache-{{ checksum "pom.xml" }}
-      - run:
-          name: Build Docker image
-          command: |
-            docker build -t nassar001/project:latest .
-            docker tag nassar001/project:latest nassar001/project:${CIRCLE_SHA1}
-      - run:
-          name: Push to Docker Hub
-          command: |
-            echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-            docker push nassar001/project:latest
-            docker push nassar001/project:${CIRCLE_SHA1}
+            
+      # Build and push Docker image
+      - docker/build:
+          image: nassar001/project
+          tag: "${CIRCLE_SHA1},latest"
+          push: true
+          cache_from: "nassar001/project:latest"
+          cache_to: type=inline
 
 workflows:
   version: 2
-  build-and-deploy:
+  build-deploy:
     jobs:
       - build-and-push:
           filters:
