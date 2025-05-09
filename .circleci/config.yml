@@ -1,8 +1,5 @@
 version: 2.1
 
-orbs:
-  docker: circleci/docker@3.1.1
-
 jobs:
   build-and-push:
     docker:
@@ -11,33 +8,23 @@ jobs:
       - checkout
       - setup_remote_docker:
           docker_layer_caching: true
-      
-      # Restore Maven dependencies cache
       - restore_cache:
           keys:
             - v1-maven-cache-{{ checksum "pom.xml" }}
-      
-      # Build Java project
       - run:
           name: Build with Maven
           command: |
             chmod +x ./mvnw
             ./mvnw clean package -DskipTests
-            
-      # Save Maven dependencies cache
       - save_cache:
           paths:
             - ~/.m2
           key: v1-maven-cache-{{ checksum "pom.xml" }}
-            
-      # Build Docker image
       - run:
           name: Build Docker image
           command: |
             docker build -t nassar001/project:latest .
             docker tag nassar001/project:latest nassar001/project:${CIRCLE_SHA1}
-            
-      # Login and push to Docker Hub
       - run:
           name: Push to Docker Hub
           command: |
