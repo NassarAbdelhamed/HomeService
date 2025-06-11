@@ -1,0 +1,44 @@
+version: 2.1
+
+orbs:
+  docker: circleci/docker@2.6.0  # Updated to latest stable version
+
+jobs:
+  build-and-push:
+    docker:
+      - image: cimg/openjdk:17.0-node  # Java 17 with Node.js
+    steps:
+      - checkout
+      
+      # Setup Docker with layer caching
+      - docker/check
+      - docker/setup-buildx:
+          install: true
+          version: latest
+      - docker/setup-docker-credentials:
+          dockerhub-username: DOCKERHUB_USERNAME
+          dockerhub-password: DOCKERHUB_PASSWORD
+      
+      # Build Java project
+      - run:
+          name: Build with Maven
+          command: |
+            chmod +x ./mvnw
+            ./mvnw clean package -DskipTests
+            
+      # Build and push Docker image
+      - docker/build:
+          image: nassar001/project
+          tag: "${CIRCLE_SHA1},latest"
+          push: true
+          cache_from: "nassar001/project:latest"
+          cache_to: type=inline
+
+workflows:
+  version: 2
+  build-deploy:
+    jobs:
+      - build-and-push:
+          filters:
+            branches:
+              only: main
